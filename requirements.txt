@@ -1,6 +1,5 @@
-streamlit==1.28.1
-pandas==2.0.3
-scikit-learn==1.4.0  # Even newer version
-nltk==3.8.1
-requests==2.31.0
-numpy==1.26.0  # Added specific numpy version
+streamlit
+pandas
+scikit-learn
+nltk
+requests
