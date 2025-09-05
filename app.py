@@ -28,10 +28,15 @@ cosine_sim_matrix = load_model(books_hash)
 
 st.set_page_config(
     page_title="Book Discovery Tool",
-    page_icon="favicon.png"
+    page_icon="favicon.png",
+    layout="wide"  # Added layout here
 )
 
-st.set_page_config(page_title="Book Discovery Tool", layout="wide")
+def file_hash(filepath):
+    with open(filepath, "rb") as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+books_hash = file_hash('books_data.csv')
 
 # Function to get the Base64 representation of an image
 def get_base64_image(image_path):
