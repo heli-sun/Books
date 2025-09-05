@@ -6,39 +6,18 @@ import base64
 import os 
 import hashlib
 
-def file_hash(filepath):
-    with open(filepath, "rb") as f:
-        return hashlib.md5(f.read()).hexdigest()
-
-books_hash = file_hash('books_data.csv')
-
-@st.cache_data
-def load_data(file_hash):
-    return pd.read_csv('books_data.csv')
-
-df = load_data(books_hash)
-
-@st.cache_data
-def load_model(file_hash):
-    df = pd.read_csv('books_data.csv')
-    return create_model_and_get_matrix(df)
-
-cosine_sim_matrix = load_model(books_hash)
-
-
+# Set page config FIRST - this must be the first Streamlit command
 st.set_page_config(
     page_title="Book Discovery Tool",
     page_icon="favicon.png",
-    layout="wide"  # Added layout here
+    layout="wide"
 )
 
+# Function definitions
 def file_hash(filepath):
     with open(filepath, "rb") as f:
         return hashlib.md5(f.read()).hexdigest()
 
-books_hash = file_hash('books_data.csv')
-
-# Function to get the Base64 representation of an image
 def get_base64_image(image_path):
     try:
         with open(image_path, "rb") as image_file:
@@ -47,7 +26,27 @@ def get_base64_image(image_path):
         st.error(f"Error: The file '{image_path}' was not found in the same folder as app.py.")
         return None
 
-# Embed the Base64 image directly into the CSS
+# Load data with caching
+@st.cache_data
+def load_data():
+    try:
+        df = pd.read_csv('books_data.csv')
+        return df
+    except FileNotFoundError:
+        st.error("books_data.csv not found. Please make sure the file exists.")
+        return None
+
+@st.cache_data
+def load_model():
+    df = pd.read_csv('books_data.csv')
+    return create_model_and_get_matrix(df)
+
+# Load data and model
+books_hash = file_hash('books_data.csv')
+df = load_data()
+cosine_sim_matrix = load_model()
+
+# Background image setup
 image_b64 = get_base64_image("bookshop.jpg")
 if image_b64:
     page_bg_img = f'''
@@ -89,7 +88,6 @@ st.markdown("""
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
     }
 
-
     .rainbow-title-wrapper {
         background: linear-gradient(
             135deg,
@@ -111,7 +109,6 @@ st.markdown("""
         margin: 0 auto 90px auto;
     }
 
-
     /* Main headings with warm rainbow gradient */
     .rainbow-title {
         background: linear-gradient(to right, #f4c542, #e89c3f, #F74A2A, #e89c3f, #f4c542);
@@ -120,12 +117,8 @@ st.markdown("""
         font-weight: 700;
         font-family: 'Cormorant Garamond', serif;
         text-align: center;
-
         text-shadow: 0.1px 0.4px 0.8px rgba(0, 0, 0, 0.3);
-            
     }
-
-
             
     /* Container border with warm gradient and glow */
     .rainbow-border-container {
@@ -174,7 +167,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
+# App UI
 st.markdown("""
 <div class="rainbow-title-wrapper">
   <h1 class="rainbow-title">✧✧✧✧✧✧Personalized Book Discovery✧✧✧✧✧✧</h1>
@@ -183,25 +176,8 @@ st.markdown("""
     
 st.markdown("### Type in a book you love to get recommendations based on the same author or a similar genre:")
 
-# ALL OF THE CODE BELOW IS OUTSIDE THE BOX
-@st.cache_resource
-def load_data():
-    try:
-        df = pd.read_csv('books_data.csv')
-        return df
-    except FileNotFoundError:
-        st.error("books_data.csv not found. Please run the data_fetcher.py script first.")
-        return None
-
-df = load_data()
-
+# Main app logic
 if df is not None:
-    @st.cache_resource
-    def load_model():
-        return create_model_and_get_matrix(df)
-    
-    cosine_sim_matrix = load_model()
-
     user_input = st.text_input("Book Title:", "").strip()
 
     if user_input:
