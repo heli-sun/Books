@@ -43,13 +43,21 @@ streamlit run app.py
 ## Project Structure
 
 book-recommendation/
+
 ├── 01_app.py                 # Main application
+
 ├── 02_recommender.py         # Recommendation algorithm  
+
 ├── 03_data_fetcher.py        # Data loading and processing
+
 ├── 04_books_data.csv         # Book dataset
+
 ├── 05_requirements.txt       # Dependencies
+
 ├── 06_bookshop.jpg           # Background image
+
 ├── 07_favicon.png            # Icon image
+
 └── 08_README.md              # Documentation
 
 
