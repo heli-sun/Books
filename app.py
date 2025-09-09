@@ -6,7 +6,7 @@ import base64
 import os 
 import hashlib
 
-# Set page config FIRST - this must be the first Streamlit command
+# Set page config FIRST
 st.set_page_config(
     page_title="Book Discovery Tool",
     page_icon="favicon.png",

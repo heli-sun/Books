@@ -58,7 +58,7 @@ def find_books_by_author(title, df, top_n=10):
                 similar_books.append(row)
         except (ValueError, SyntaxError):
             continue
-    # New: Convert list of Series to list of dicts
+    # Convert list of Series to list of dicts
     if similar_books:
         return pd.DataFrame(similar_books).to_dict('records')
     return []
@@ -101,7 +101,7 @@ def find_books_by_genre(title, df, similarity_threshold=0.3, top_n=10):
                 similar_books.append(row)
         except (ValueError, SyntaxError):
             continue
-    # New: Convert list of Series to list of dicts
+    # Convert list of Series to list of dicts
     if similar_books:
         return pd.DataFrame(similar_books).to_dict('records')
     return []
